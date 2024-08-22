@@ -9,11 +9,11 @@ function App() {
   const isAuthenticated=useSelector(state=>state.auth.isAuthenticated);
   return (
     <Fragment>
-      <UserPage/>
       <Router>
+      <UserPage/>
         {isAuthenticated && <AdminPanel/>}
         <Routes>
-          {!isAuthenticated && <Route path="/" element={<SignUp/>}/>}
+          {!isAuthenticated && <Route path="/admin" element={<SignUp/>}/>}
         </Routes>
       </Router>
       </Fragment>

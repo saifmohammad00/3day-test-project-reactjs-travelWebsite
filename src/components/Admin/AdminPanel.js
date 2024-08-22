@@ -20,12 +20,14 @@ const AdminPanel = () => {
           <label>Upload place images
             <input type="file" multiple required/>
           </label>
-          <select required>Select Category:
+          <label>Choose Category:
+          <select required>
             <option value="" disabled selected>Select</option>
             <option value="option1">Villa</option>
             <option value="option2">Apartment</option>
             <option value="option3">House Boat</option>
           </select>
+          </label>
           <button type="submit">Submit</button>
     </form>
     </div>
