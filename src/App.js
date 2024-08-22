@@ -3,6 +3,7 @@ import SignUp from "./components/Admin/SignUp";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import AdminPanel from "./components/Admin/AdminPanel";
+import Header from "./components/User/Header";
 import UserPage from "./components/User/UserPage";
 
 function App() {
@@ -10,9 +11,10 @@ function App() {
   return (
     <Fragment>
       <Router>
-      <UserPage/>
+      <Header/>
         {isAuthenticated && <AdminPanel/>}
         <Routes>
+          <Route path="/" element={<UserPage/>}/>
           {!isAuthenticated && <Route path="/admin" element={<SignUp/>}/>}
         </Routes>
       </Router>
