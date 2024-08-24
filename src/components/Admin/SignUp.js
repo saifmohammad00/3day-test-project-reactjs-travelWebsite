@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { authActions } from "../store/auth";
 import { useDispatch } from "react-redux";
 
-const apiKey = "AIzaSyDQEFzk2BWKBRdL62fH-2cByCoT9RjSNYc";
+const apiKey = "AIzaSyBHlr2WrhKoZ9G-VcFi0TBKrgV0zc2ehdI";
 
 const SignUp = () => {
     const dispatch=useDispatch();
@@ -51,7 +51,7 @@ const SignUp = () => {
                 setIsLogged((prev) => !prev);
             } else {
                 dispatch(authActions.login());
-                dispatch(authActions.setToken(data.idToken));
+                // dispatch(authActions.setToken(data.idToken));
             }
         } catch (error) {
             alert(error.message)

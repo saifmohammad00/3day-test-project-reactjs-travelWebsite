@@ -12,8 +12,8 @@ function App() {
     <Fragment>
       <Router>
       <Header/>
-        {isAuthenticated && <AdminPanel/>}
         <Routes>
+        {isAuthenticated && <Route path="/admin" element={<AdminPanel/>}/>}
           <Route path="/" element={<UserPage/>}/>
           {!isAuthenticated && <Route path="/admin" element={<SignUp/>}/>}
         </Routes>
