@@ -19,7 +19,7 @@ const Header=()=>{
     return <>
     <header className={classes.header}>
         <h1>Travel Website</h1>
-        <button type="button" onClick={handleUser}>User page</button>
+        <button type="button" onClick={handleUser}>Home</button>
         <button type="button" onClick={handleLogin}>Admin Login</button>
         {isAuthenticated && <button type="button" onClick={handleLogout}>Logout</button>}
     </header>
