@@ -1,7 +1,6 @@
 import React from "react";
 import { useRef, useState } from "react";
 import classes from "./SignUp.module.css";
-import { Link } from "react-router-dom";
 import { authActions } from "../store/auth";
 import { useDispatch } from "react-redux";
 
@@ -63,7 +62,6 @@ const SignUp = () => {
             <input type="email" id="email" placeholder="Email" ref={handleEmail} required />
             <input type="password" id="pass" placeholder="Password" ref={handlePass} required />
             {!isLogged && <input type="password" id="cpass" placeholder="Confirm Password" ref={handleCpass} required />}
-            <Link to="/" style={{ marginBottom: "10px" }}>Forget password?</Link>
             <button>{!isLogged ? "Sign Up" : "Login"}</button>
             <button type="button" onClick={() => setIsLogged(!isLogged)}>{!isLogged ? "Already Have an Account?Login" : "New User? Sign Up"}</button>
         </form>

@@ -1,122 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import classes from "./AdminPanel.module.css";
 import AdminList from "./AdminList";
-
-const initialData = [
-  // Villa Category
-  {
-    id: 0,
-    place: "Villa Serenity",
-    price: "150",
-    address: "123 Ocean Drive, Malibu, CA 90265",
-    images: [
-      "https://picsum.photos/seed/villa1/300/200",
-      "https://picsum.photos/seed/villa2/300/200"
-    ],
-    category: "Villa"
-  },
-  {
-    id: 1,
-    place: "Mediterranean Escape",
-    price: "250",
-    address: "456 Coastal Road, Santorini, Greece",
-    images: [
-      "https://picsum.photos/seed/villa3/300/200",
-      "https://picsum.photos/seed/villa4/300/200",
-      "https://picsum.photos/seed/villa5/300/200"
-    ],
-    category: "Villa"
-  },
-  {
-    id: 2,
-    place: "Mountain Retreat",
-    price: "180",
-    address: "789 Summit Drive, Aspen, CO 81611",
-    images: [
-      "https://picsum.photos/seed/villa6/300/200",
-      "https://picsum.photos/seed/villa7/300/200",
-      "https://picsum.photos/seed/villa8/300/200"
-    ],
-    category: "Villa"
-  },
-
-  // Apartment Category
-  {
-    id: 3,
-    place: "Urban Apartment",
-    price: "80",
-    address: "456 City Center, New York, NY 10001",
-    images: [
-      "https://picsum.photos/seed/apartment1/300/200",
-      "https://picsum.photos/seed/apartment2/300/200"
-    ],
-    category: "Apartment"
-  },
-  {
-    id: 4,
-    place: "Chic Downtown Loft",
-    price: "120",
-    address: "123 Main Street, San Francisco, CA 94105",
-    images: [
-      "https://picsum.photos/seed/apartment3/300/200",
-      "https://picsum.photos/seed/apartment4/300/200",
-      "https://picsum.photos/seed/apartment5/300/200"
-    ],
-    category: "Apartment"
-  },
-  {
-    id: 5,
-    place: "Cozy Studio",
-    price: "65",
-    address: "789 Elm Street, Austin, TX 78701",
-    images: [
-      "https://picsum.photos/seed/apartment6/300/200",
-      "https://picsum.photos/seed/apartment7/300/200"
-    ],
-    category: "Apartment"
-  },
-
-  // Houseboat Category
-  {
-    id: 6,
-    place: "Luxury Houseboat",
-    price: "350",
-    address: "101 Floating Dock, Seattle, WA 98109",
-    images: [
-      "https://picsum.photos/seed/houseboat1/300/200",
-      "https://picsum.photos/seed/houseboat2/300/200",
-      "https://picsum.photos/seed/houseboat3/300/200"
-    ],
-    category: "Houseboat"
-  },
-  {
-    id: 7,
-    place: "Serene Floating Home",
-    price: "290",
-    address: "202 Harbor View, Amsterdam, Netherlands",
-    images: [
-      "https://picsum.photos/seed/houseboat4/300/200",
-      "https://picsum.photos/seed/houseboat5/300/200",
-      "https://picsum.photos/seed/houseboat6/300/200"
-    ],
-    category: "Houseboat"
-  },
-  {
-    id: 8,
-    place: "Rustic Houseboat Retreat",
-    price: "220",
-    address: "303 River Bend, Nashville, TN 37203",
-    images: [
-      "https://picsum.photos/seed/houseboat7/300/200",
-      "https://picsum.photos/seed/houseboat8/300/200"
-    ],
-    category: "Houseboat"
-  }
-];
+import { useDispatch, useSelector } from "react-redux";
+import { travelActions } from "../store/traveldata";
 
 
 const AdminPanel = () => {
-  const [list, setList] = useState(initialData);
+  const list = useSelector(state => state.user.items);
+  const dispatch = useDispatch();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [categories, setCategories] = useState(new Set(["Villa", "Apartment", "Houseboat"]));
   const [imageIndices, setImageIndices] = useState({}); // Object to track image index for each listing
@@ -136,11 +27,18 @@ const AdminPanel = () => {
           throw new Error("failed to fetch data");
         }
         const data = await res.json();
-        if (data && typeof data==='object') {
+        if (data && typeof data === 'object') {
           const fetchedData = Object.keys(data).map(key => ({ ...data[key], id: key }));
-          setList(fetchedData);
+          dispatch(travelActions.add(fetchedData));
+          const newCategories = new Set(fetchedData.map(item => item.category));
+          setCategories(prev => new Set([...prev, ...newCategories]));
+          const newImageIndices = fetchedData.reduce((acc, item) => {
+            acc[item.id] = 0;
+            return acc;
+          }, {});
+          setImageIndices(prev => ({ ...prev, newImageIndices }));
         }
-        else{
+        else {
           console.warn("fetched data is not in the expected format")
         }
       } catch (error) {
@@ -158,11 +56,10 @@ const AdminPanel = () => {
       place: enteredPlace.current.value,
       price: enteredPrice.current.value,
       address: enteredAddress.current.value,
-      images: Array.from(enteredImages.current.files).map(file => URL.createObjectURL(file)),
+      images: enteredImages.current.value.split(',').map(url => url.trim()),
       category: selectedRef.current.value,
     };
-
-    setList(prev => [...prev, formData]);
+    dispatch(travelActions.add(formData));
     setCategories(prev => new Set(prev).add(formData.category));
     setImageIndices(prev => ({ ...prev, [formData.id]: 0 })); // Initialize image index for new listing
 
@@ -206,6 +103,22 @@ const AdminPanel = () => {
     });
   };
 
+  const handleEdit = async (item) => {
+    enteredPlace.current.value = item.place;
+    enteredPrice.current.value = item.price;
+    enteredAddress.current.value = item.address;
+    enteredImages.current.value = item.images;
+    selectedRef.current.value = item.category;
+    //   try{
+    //     const res=await fetch('https://react-auth-a54ec-default-rtdb.firebaseio.com/travel.json',{
+    //      method:"PUT",
+    //      body:""
+    //     })
+    //  }catch(error){
+
+    //  }
+  }
+
   // Filter items based on selected category
   const filteredItems = selectedCategory ? list.filter(item => item.category === selectedCategory) : list;
 
@@ -227,8 +140,9 @@ const AdminPanel = () => {
             <input type="text" ref={enteredAddress} required />
           </label>
           <label>
-            Upload Place Images (3-4 images):
-            <input type="file" ref={enteredImages} multiple accept="image/*" required />
+            Image URLs (separate with commas):<br/>
+            <br/>
+            <textarea ref={enteredImages} style={{width:"100%"}} placeholder="Enter image URLs separated by commas" required />
           </label>
           <label>
             Choose Category:
@@ -248,13 +162,14 @@ const AdminPanel = () => {
         </div>
       </div>
       <AdminList
-      list={filteredItems}
-      categories={[...categories]}
-      selectedCategory={selectedCategory}
-      setSelectedCategory={setSelectedCategory}
-      imageIndices={imageIndices}
-      handleNextImage={handleNextImage}
-      handlePrevImage={handlePrevImage}
+        list={filteredItems}
+        categories={[...categories]}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        imageIndices={imageIndices}
+        handleNextImage={handleNextImage}
+        handlePrevImage={handlePrevImage}
+        setEdit={handleEdit}
       />
     </div>
   );

@@ -72,11 +72,14 @@
   }
   
   /* Slider Styles */
+  .card{
+    display: flex;
+    margin-bottom: 10px;
+  }
   .slider {
     position: relative;
-    width: 100%;
-    max-width: 600px;
-    margin: auto;
+    width: 400px;
+    margin-right: 10px;
   }
   
   .sliderImage {
