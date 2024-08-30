@@ -1,9 +1,12 @@
 import React from "react";
 import classes from "./AdminPanel.module.css";
 
-const AdminList = ({ selectedCategory, categories = [], setSelectedCategory, list, setEdit, handlePrevImage, imageIndices = {}, handleNextImage }) => {
+const AdminList = ({ selectedCategory, categories = [], setSelectedCategory, list,setDelete, setEdit, handlePrevImage, imageIndices = {}, handleNextImage }) => {
   const handleEdit = async (item) => {
-    // setEdit(item);
+    setEdit(item);
+  }
+  const handleDelete=async(item)=>{
+    setDelete(item);
   }
   console.log(list);
   return <div style={{ width: "100%" }}>
@@ -47,7 +50,8 @@ const AdminList = ({ selectedCategory, categories = [], setSelectedCategory, lis
                 >
                   &#10095;
                 </button>
-                {/* <button onClick={() => handleEdit(item)}>Edit</button> */}
+                <button onClick={() => handleEdit(item)}>Edit</button>
+                <button onClick={()=>handleDelete(item)}>Delete</button>
               </div>
               <div>
                 <h1>{item.place}</h1>

@@ -8,6 +8,8 @@ import { travelActions } from "../store/traveldata";
 const AdminPanel = () => {
   const list = useSelector(state => state.user.items);
   const dispatch = useDispatch();
+  const [isEdit, setIsEdit] = useState(false);
+  const [editId, setEditId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [categories, setCategories] = useState(new Set(["Villa", "Apartment", "Houseboat"]));
   const [imageIndices, setImageIndices] = useState({}); // Object to track image index for each listing
@@ -46,36 +48,57 @@ const AdminPanel = () => {
       }
     }
     getData();
-  }, [])
+  }, [dispatch])
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const formData = {
-      id: list.length,
+      id: isEdit ? editId : list.length,
       place: enteredPlace.current.value,
       price: enteredPrice.current.value,
       address: enteredAddress.current.value,
       images: enteredImages.current.value.split(',').map(url => url.trim()),
       category: selectedRef.current.value,
     };
-    dispatch(travelActions.add(formData));
-    setCategories(prev => new Set(prev).add(formData.category));
-    setImageIndices(prev => ({ ...prev, [formData.id]: 0 })); // Initialize image index for new listing
-
-    try {
-      const res = await fetch('https://react-auth-a54ec-default-rtdb.firebaseio.com/travel.json', {
-        method: "POST",
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json'
+    // Initialize image index for new listing
+    if (isEdit) {
+      try {
+        const res = await fetch(`https://react-auth-a54ec-default-rtdb.firebaseio.com/travel/${editId}.json`, {
+          method: "PUT",
+          body: JSON.stringify(formData),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        if (!res.ok) {
+          throw new Error("unable to edit data");
         }
-      });
-      if (!res.ok) {
-        throw new Error("Unable to add data");
+        dispatch(travelActions.add(formData));
+        setCategories(prev => new Set(prev).add(formData.category));
+        setImageIndices(prev => ({ ...prev, [formData.id]: 0 }));
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
+    }
+    else {
+      try {
+        const res = await fetch('https://react-auth-a54ec-default-rtdb.firebaseio.com/travel.json', {
+          method: "POST",
+          body: JSON.stringify(formData),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        if (!res.ok) {
+          throw new Error("Unable to add data");
+        }
+        dispatch(travelActions.add(formData));
+        setCategories(prev => new Set(prev).add(formData.category));
+        setImageIndices(prev => ({ ...prev, [formData.id]: 0 }));
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -109,14 +132,25 @@ const AdminPanel = () => {
     enteredAddress.current.value = item.address;
     enteredImages.current.value = item.images;
     selectedRef.current.value = item.category;
-    //   try{
-    //     const res=await fetch('https://react-auth-a54ec-default-rtdb.firebaseio.com/travel.json',{
-    //      method:"PUT",
-    //      body:""
-    //     })
-    //  }catch(error){
+    setIsEdit(true);
+    setEditId(item.id);
 
-    //  }
+  }
+  const handleDelete = async (item) => {
+    try {
+      const res = await fetch(`https://react-auth-a54ec-default-rtdb.firebaseio.com/travel/${item.id}.json`, {
+        method: "DELETE",
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      if (!res.ok) {
+        throw new Error('unable to delete');
+      }
+      dispatch(travelActions.remove(item.id));
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // Filter items based on selected category
@@ -140,9 +174,9 @@ const AdminPanel = () => {
             <input type="text" ref={enteredAddress} required />
           </label>
           <label>
-            Image URLs (separate with commas):<br/>
-            <br/>
-            <textarea ref={enteredImages} style={{width:"100%"}} placeholder="Enter image URLs separated by commas" required />
+            Image URLs (separate with commas):<br />
+            <br />
+            <textarea ref={enteredImages} style={{ width: "100%" }} placeholder="Enter image URLs separated by commas" required />
           </label>
           <label>
             Choose Category:
@@ -153,7 +187,7 @@ const AdminPanel = () => {
               ))}
             </select>
           </label>
-          <button type="submit">Submit</button>
+          <button type="submit">{isEdit ? "Edit" : "Submit"}</button>
         </form>
         <div>
           <h2>Add New Category</h2>
@@ -170,6 +204,7 @@ const AdminPanel = () => {
         handleNextImage={handleNextImage}
         handlePrevImage={handlePrevImage}
         setEdit={handleEdit}
+        setDelete={handleDelete}
       />
     </div>
   );

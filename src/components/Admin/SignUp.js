@@ -4,7 +4,7 @@ import classes from "./SignUp.module.css";
 import { authActions } from "../store/auth";
 import { useDispatch } from "react-redux";
 
-const apiKey = "";
+const apiKey = "AIzaSyBbyftNmzhRsI9dt-Uzl_V8aE7t6tuGwk4";
 
 const SignUp = () => {
     const dispatch=useDispatch();

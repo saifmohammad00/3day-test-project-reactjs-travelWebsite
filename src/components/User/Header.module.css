@@ -40,7 +40,7 @@
     background-color: white;
     width: 5rem;
     height: 3rem;
-    margin-left: -100px;
+    margin-left: -50px;
 }
 .overlay{
     position: fixed; /* Fixed position to cover the entire viewport */
@@ -52,6 +52,7 @@
     display: flex;
     align-items: center; /* Center content vertically */
     justify-content: center; /* Center content horizontally */
+    z-index: 5;
 }
 .cart{
     background-color: white; /* White background for the cart */
