@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import classes from "./AdminPanel.module.css";
 import AdminList from "./AdminList";
 import { useDispatch, useSelector } from "react-redux";
-import { travelActions } from "../store/traveldata";
+import { fetchData, travelActions } from "../store/traveldata";
 
 
 const AdminPanel = () => {
@@ -11,7 +11,7 @@ const AdminPanel = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [editId, setEditId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [categories, setCategories] = useState(new Set(["Villa", "Apartment", "Houseboat"]));
+  const [categories, setCategories] = useState(new Set([]));
   const [imageIndices, setImageIndices] = useState({}); // Object to track image index for each listing
 
   const enteredPlace = useRef();
@@ -22,33 +22,20 @@ const AdminPanel = () => {
   const newCategoryRef = useRef();
 
   useEffect(() => {
-    async function getData() {
-      try {
-        const res = await fetch('https://react-auth-a54ec-default-rtdb.firebaseio.com/travel.json')
-        if (!res.ok) {
-          throw new Error("failed to fetch data");
-        }
-        const data = await res.json();
-        if (data && typeof data === 'object') {
-          const fetchedData = Object.keys(data).map(key => ({ ...data[key], id: key }));
-          dispatch(travelActions.add(fetchedData));
-          const newCategories = new Set(fetchedData.map(item => item.category));
-          setCategories(prev => new Set([...prev, ...newCategories]));
-          const newImageIndices = fetchedData.reduce((acc, item) => {
-            acc[item.id] = 0;
-            return acc;
-          }, {});
-          setImageIndices(prev => ({ ...prev, newImageIndices }));
-        }
-        else {
-          console.warn("fetched data is not in the expected format")
-        }
-      } catch (error) {
-        console.log(error, "hello");
-      }
+    dispatch(fetchData());
+  }, [dispatch]);
+  
+  useEffect(() => {
+    if (list.length > 0) {
+      const newCategories = new Set(list.map(item => item.category));
+      setCategories(prev => new Set([...prev, ...newCategories]));
+      const newImageIndices = list.reduce((acc, item) => {
+        acc[item.id] = 0;
+        return acc;
+      }, {});
+      setImageIndices(newImageIndices);
     }
-    getData();
-  }, [dispatch])
+  }, [list]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -100,6 +87,11 @@ const AdminPanel = () => {
         console.error(error);
       }
     }
+    enteredPlace.current.value = "";
+    enteredPrice.current.value = "";
+    enteredAddress.current.value = "";
+    enteredImages.current.value = "";
+    selectedRef.current.value = "";
   };
 
   const handleAddCategory = () => {
@@ -137,6 +129,7 @@ const AdminPanel = () => {
 
   }
   const handleDelete = async (item) => {
+    console.log(item);
     try {
       const res = await fetch(`https://react-auth-a54ec-default-rtdb.firebaseio.com/travel/${item.id}.json`, {
         method: "DELETE",

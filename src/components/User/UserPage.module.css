@@ -7,3 +7,41 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-top: 8rem;
 }
+.card{
+    display: flex;
+    margin-bottom: 10px;
+  }
+  .slider {
+    position: relative;
+    width: 400px;
+    height: 300px;
+    margin-right: 10px;
+  }
+  
+  .sliderImage {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  
+  .prevButton,
+  .nextButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1;
+  }
+  
+  .prevButton {
+    left: 10px; /* Add a little padding from the edge */
+  }
+  
+  .nextButton {
+    right: 10px; /* Add a little padding from the edge */
+  }
+  

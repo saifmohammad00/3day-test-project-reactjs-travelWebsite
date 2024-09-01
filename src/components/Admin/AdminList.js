@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import classes from "./AdminPanel.module.css";
+import { useSelector } from "react-redux";
 
-const AdminList = ({ selectedCategory, categories = [], setSelectedCategory, list,setDelete, setEdit, handlePrevImage, imageIndices = {}, handleNextImage }) => {
+const AdminList = ({ selectedCategory, categories = [], setSelectedCategory,setDelete,list, setEdit, handlePrevImage, imageIndices = {}, handleNextImage }) => {
   const handleEdit = async (item) => {
     setEdit(item);
   }

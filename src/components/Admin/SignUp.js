@@ -3,11 +3,13 @@ import { useRef, useState } from "react";
 import classes from "./SignUp.module.css";
 import { authActions } from "../store/auth";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-const apiKey = "AIzaSyBbyftNmzhRsI9dt-Uzl_V8aE7t6tuGwk4";
+const apiKey = "AIzaSyCKE5Ygo912xBROCCl6POImM6UQu8KCvXw";
 
 const SignUp = () => {
     const dispatch=useDispatch();
+    const navigate=useNavigate();
     const [isLogged, setIsLogged] = useState(false);
     const handleEmail = useRef();
     const handlePass = useRef();
@@ -50,6 +52,8 @@ const SignUp = () => {
                 setIsLogged((prev) => !prev);
             } else {
                 dispatch(authActions.login());
+                // navigate("/admin");
+                
                 // dispatch(authActions.setToken(data.idToken));
             }
         } catch (error) {

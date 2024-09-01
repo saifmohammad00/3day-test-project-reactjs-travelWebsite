@@ -11,7 +11,7 @@ const initialUserPageState = {
         // { id: 6, place: "Luxury Houseboat", price: "350", address: "101 Floating Dock, Seattle, WA 98109", images: ["https://picsum.photos/seed/houseboat1/300/200", "https://picsum.photos/seed/houseboat2/300/200", "https://picsum.photos/seed/houseboat3/300/200"], category: "Houseboat" },
         // { id: 7, place: "Serene Floating Home", price: "290", address: "202 Harbor View, Amsterdam, Netherlands", images: ["https://picsum.photos/seed/houseboat4/300/200", "https://picsum.photos/seed/houseboat5/300/200", "https://picsum.photos/seed/houseboat6/300/200"], category: "Houseboat" },
         // { id: 8, place: "Rustic Houseboat Retreat", price: "220", address: "303 River Bend, Nashville, TN 37203", images: ["https://picsum.photos/seed/houseboat7/300/200", "https://picsum.photos/seed/houseboat8/300/200"], category: "Houseboat" }
-    
+
     ]
 }
 const travelSlice = createSlice({
@@ -19,12 +19,11 @@ const travelSlice = createSlice({
     initialState: initialUserPageState,
     reducers: {
         add(state, action) {
-            console.log(action.payload);
             const payloadArray = Array.isArray(action.payload) ? action.payload : [action.payload];
             payloadArray.forEach(payloadItem => {
                 const itemIndex = state.items.findIndex(item => item.id === payloadItem.id)
                 if (itemIndex !== -1) {
-                    state.items[itemIndex] =payloadItem;
+                    state.items[itemIndex] = payloadItem;
                 } else {
                     state.items.push(payloadItem);
                 }
@@ -35,6 +34,28 @@ const travelSlice = createSlice({
         }
     }
 })
+export const fetchData = () => {
+    return async(dispatch) => {
+        try {
+            const res = await fetch('https://react-auth-a54ec-default-rtdb.firebaseio.com/travel.json')
+            if (!res.ok) {
+                throw new Error("failed to fetch data");
+            }
+            const data = await res.json();
+            console.log(data);
+            if (data && typeof data === 'object') {
+                const fetchedData = Object.keys(data).map(key => ({ ...data[key], id: key }));
+                dispatch(travelActions.add(fetchedData));
+            }
+            else {
+                console.warn("fetched data is not in the expected format")
+            }
+        } catch (error) {
+            console.log(error, "hello");
+        }
+    }
+
+}
 
 export const travelActions = travelSlice.actions;
-export default travelSlice.reducer;
+export default travelSlice;

@@ -10,7 +10,7 @@ const Header = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const handleLogin = () => {
-        navigate("/admin");
+        navigate("/signup");
     }
     const handleUser = () => {
         navigate("/");
