@@ -1,0 +1,119 @@
+/* General Container Styles */
+.container {
+    padding: 20px;
+    background-color: #f1f1f1; /* Light background for the entire page */
+  }
+  
+  .inputForm {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 10rem;
+  }
+  
+  .inputForm h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+  
+  .inputForm form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .inputForm label {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #555;
+  }
+  
+  .inputForm input[type="text"],
+  .inputForm input[type="number"] {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .inputForm input[type="file"] {
+    margin-top: 5px;
+  }
+  
+  .inputForm select {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #fff;
+    width: 100%;
+  }
+  
+  .inputForm button[type="submit"] {
+    padding: 10px 20px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .inputForm button[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Slider Styles */
+  .card{
+    display: flex;
+    margin-bottom: 10px;
+  }
+  .slider {
+    position: relative;
+    width: 400px;
+    height: 300px;
+    margin-right: 10px;
+  }
+  
+  .sliderImage {
+    width: 100%;
+    height: 90%;
+    display: block;
+  }
+  
+  .prevButton,
+  .nextButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1;
+  }
+  
+  .prevButton {
+    left: 10px; /* Add a little padding from the edge */
+  }
+  
+  .nextButton {
+    right: 10px; /* Add a little padding from the edge */
+  }
+  
+  /* Ensure content clears floats */
+  .clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
