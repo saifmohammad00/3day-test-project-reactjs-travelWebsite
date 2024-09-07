@@ -5,7 +5,7 @@ import cartReducer from "./cart";
 
 
 const store=configureStore({
-    reducer:{auth:authReducer,user:travelSlice.reducer,cart:cartReducer}
+    reducer:{auth:authReducer,user:travelSlice,cart:cartReducer}
 });
 
 export default store;

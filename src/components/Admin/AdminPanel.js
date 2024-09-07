@@ -6,11 +6,12 @@ import { fetchData, travelActions } from "../store/traveldata";
 
 
 const AdminPanel = () => {
+  const myCategory=useSelector(state=>state.cart.selectedCategory);
   const list = useSelector(state => state.user.items);
   const dispatch = useDispatch();
   const [isEdit, setIsEdit] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(myCategory);
   const [categories, setCategories] = useState(new Set([]));
   const [imageIndices, setImageIndices] = useState({}); // Object to track image index for each listing
 

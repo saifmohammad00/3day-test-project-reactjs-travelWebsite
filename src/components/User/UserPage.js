@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import classes from "./UserPage.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchData } from "../store/traveldata";
+import { fetchData, travelActions } from "../store/traveldata";
 import { cartActions } from "../store/cart";
 
 const UserPage = () => {
+    const myCategory=useSelector(state=>state.user.selectedCategory);
     const dispatch = useDispatch();
     const list = useSelector(state => state.user.items);
-    const [selectedCategory, setSelectedCategory] = useState("");
     const [categories, setCategories] = useState(new Set([]));
     const [imageIndices, setImageIndices] = useState({});
-    const [isClick, setIsClick] = useState(false);
     const [openbook,setopenBookItem]=useState(null);
     const enteredName=useRef();
     const enteredStartDate=useRef();
@@ -32,6 +31,9 @@ const UserPage = () => {
             setImageIndices(newImageIndices);
         }
     }, [list]);
+    const handleSelectedCategory=(category)=>{
+        dispatch(travelActions.clickCategory(category));
+    }
 
     const handleNextImage = (listingId) => {
         setImageIndices(prev => {
@@ -69,18 +71,18 @@ const UserPage = () => {
         setopenBookItem(null);
     }
     // Filter items based on selected category
-    const filteredItems = selectedCategory ? list.filter(item => item.category === selectedCategory) : list;
+    const filteredItems = myCategory ? list.filter(item => item.category === myCategory) : list;
     
     return <div style={{ justifyContent: "center" }}>
         <div className={classes.userpage}>
             <h1>Travel Destinations</h1>
         </div>
         <div style={{ width: "100%" }}>
-            {!selectedCategory && <div style={{ textAlign: "center" }}>
+            {!myCategory && <div style={{ textAlign: "center" }}>
                 <h2>Categories</h2>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", justifyContent: "center" }}>
                     {[...categories].map(category => (
-                        <div key={category} onClick={() => setSelectedCategory(category)} style={{ cursor: 'pointer', width: "80%", margin: "10px", flex: "1 1 calc(25% - 16px)" }}>
+                        <div key={category} onClick={() => handleSelectedCategory(category)} style={{ cursor: 'pointer', width: "80%", margin: "10px", flex: "1 1 calc(25% - 16px)" }}>
                             <h3>{category}</h3>
                             {filteredItems.some(item => item.category === category) && (
                                 <img
@@ -93,7 +95,7 @@ const UserPage = () => {
                     ))}
                 </div>
             </div>}
-            {selectedCategory && <div style={{ display: "grid", justifyContent: "center" }}>
+            {myCategory && <div style={{ display: "grid", justifyContent: "center" }}>
                 <h2>Submitted Items</h2>
                 {filteredItems.map((item) => (
                     <div key={item.id}>
@@ -107,7 +109,7 @@ const UserPage = () => {
                                 </button>
                                 <img
                                     src={item.images[imageIndices[item.id] || 0]}
-                                    alt="Slider Image"
+                                    alt="SliderImage"
                                     className={classes.sliderImage}
                                 />
                                 <button
@@ -141,7 +143,7 @@ const UserPage = () => {
                                             <input type="number" ref={enteredGuests} required/>
                                         </label>
                                         <button className={classes.addButton} type="submit">Done</button>
-                                        <button className={classes.closeButton} type="button" onClick={() => setIsClick(false)}>Close</button>
+                                        <button className={classes.closeButton} type="button" onClick={() => setopenBookItem(null)}>Close</button>
                                     </form>
                                 </div>
                             </div>)}

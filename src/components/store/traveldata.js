@@ -12,7 +12,8 @@ const initialUserPageState = {
         // { id: 7, place: "Serene Floating Home", price: "290", address: "202 Harbor View, Amsterdam, Netherlands", images: ["https://picsum.photos/seed/houseboat4/300/200", "https://picsum.photos/seed/houseboat5/300/200", "https://picsum.photos/seed/houseboat6/300/200"], category: "Houseboat" },
         // { id: 8, place: "Rustic Houseboat Retreat", price: "220", address: "303 River Bend, Nashville, TN 37203", images: ["https://picsum.photos/seed/houseboat7/300/200", "https://picsum.photos/seed/houseboat8/300/200"], category: "Houseboat" }
 
-    ]
+    ],
+    selectedCategory:"",
 }
 const travelSlice = createSlice({
     name: 'travel-page',
@@ -31,6 +32,9 @@ const travelSlice = createSlice({
         },
         remove(state, action) {
             state.items = state.items.filter(item => item.id !== action.payload)
+        },
+        clickCategory(state,action){
+           state.selectedCategory=action.payload;
         }
     }
 })
@@ -58,4 +62,4 @@ export const fetchData = () => {
 }
 
 export const travelActions = travelSlice.actions;
-export default travelSlice;
+export default travelSlice.reducer;
