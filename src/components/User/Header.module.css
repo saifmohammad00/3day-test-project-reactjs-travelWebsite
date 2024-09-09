@@ -82,6 +82,9 @@
     height: 3rem;
     margin-left: -50px;
 }
+.header h1{
+    margin-left: 15px;
+}
 .overlay{
     position: fixed; /* Fixed position to cover the entire viewport */
     top: 0;

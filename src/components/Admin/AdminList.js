@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import classes from "./AdminPanel.module.css";
-import { useSelector } from "react-redux";
 
 const AdminList = ({ selectedCategory, categories = [], setSelectedCategory,setDelete,list, setEdit, handlePrevImage, imageIndices = {}, handleNextImage }) => {
   const handleEdit = async (item) => {
@@ -42,7 +41,7 @@ const AdminList = ({ selectedCategory, categories = [], setSelectedCategory,setD
                 </button>
                 <img
                   src={item.images[imageIndices[item.id] || 0]}
-                  alt="Slider Image"
+                  alt="SliderImage"
                   className={classes.sliderImage}
                 />
                 <button
